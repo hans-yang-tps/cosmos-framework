@@ -72,8 +72,7 @@ _INPUTS = [
 # compact caption of that clip (the dense cookbook caption is not needed to
 # exercise the path).
 _TRANSFER_CONTROL_URL = (
-    "https://github.com/NVIDIA/cosmos/raw/main/"
-    "cookbooks/cosmos3/generator/transfer/assets/edge/control_edge.mp4"
+    "https://github.com/NVIDIA/cosmos/raw/main/cookbooks/cosmos3/generator/transfer/assets/edge/control_edge.mp4"
 )
 _TRANSFER_SPEC = {
     "name": "transfer_edge",
@@ -103,7 +102,7 @@ _TRANSFER_SPEC = {
 
 # Audio sanity thresholds for the muxed sound track.
 _RMS_SILENCE_FLOOR = 1e-4  # below this the track is effectively silence
-_PEAK_SANITY_CEIL = 1.5    # decoded float audio should sit within ~[-1, 1]
+_PEAK_SANITY_CEIL = 1.5  # decoded float audio should sit within ~[-1, 1]
 
 
 def _free_port() -> int:
@@ -124,8 +123,13 @@ def _run(cmd: list[str], log_file: Path) -> str:
     captured: list[str] = []
     with log_file.open("w") as fp:
         proc = subprocess.Popen(
-            cmd, env=env, cwd=str(REPO_ROOT),
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1,
+            cmd,
+            env=env,
+            cwd=str(REPO_ROOT),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            bufsize=1,
         )
         assert proc.stdout is not None
         for line in proc.stdout:

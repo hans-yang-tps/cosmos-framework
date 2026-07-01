@@ -276,7 +276,9 @@ def _extract_joint_values_from_state(state: np.ndarray, embodiment_type: str) ->
         AGIBOT_WORLD_HEAD_PITCH_JOINT_NAME: float(head_pitch),
     }
     joint_values.update({name: float(arm_state[idx]) for idx, name in enumerate(AGIBOT_WORLD_ARM_JOINT_NAMES_LEFT)})
-    joint_values.update({name: float(arm_state[7 + idx]) for idx, name in enumerate(AGIBOT_WORLD_ARM_JOINT_NAMES_RIGHT)})
+    joint_values.update(
+        {name: float(arm_state[7 + idx]) for idx, name in enumerate(AGIBOT_WORLD_ARM_JOINT_NAMES_RIGHT)}
+    )
     _set_gripper_joint_values_from_state(joint_values, state, embodiment_type)
     return joint_values
 
@@ -394,5 +396,3 @@ def convert_gripper_state_to_open_fraction(values: np.ndarray) -> np.ndarray:
         f"Expected URDF angle [-pi/4,0] or actuator-close degrees [0,{max_actuator_value:.1f}] "
         f"(values above {AGIBOT_WORLD_GRIPPER_OPEN_ACTUATOR_DEG:.1f} are clipped closed)."
     )
-
-

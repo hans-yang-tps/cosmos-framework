@@ -30,15 +30,15 @@ from cosmos_framework.inference.common.config import (
     structure_config,
 )
 from cosmos_framework.inference.common.init import init_output_dir, is_rank0
-from cosmos_framework.utils.flags import SMOKE
 from cosmos_framework.trainer import ImaginaireTrainer
 from cosmos_framework.utils import log
+from cosmos_framework.utils.flags import SMOKE
 
 if TYPE_CHECKING:
     from torch.utils.data import DataLoader
 
-    from cosmos_framework.utils.config import Config
     from cosmos_framework.model.vfm.omni_mot_model import OmniMoTModel
+    from cosmos_framework.utils.config import Config
 
 
 def _validate_config_file(v: Path) -> Path:

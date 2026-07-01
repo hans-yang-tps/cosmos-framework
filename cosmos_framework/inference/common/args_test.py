@@ -19,9 +19,7 @@ def test_download_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     # Disable the URL cache; this test asserts each download is independent.
     monkeypatch.delenv("COSMOS_DOWNLOAD_CACHE_DIR", raising=False)
 
-    download_url_1 = (
-        "https://github.com/nvidia-cosmos/cosmos-dependencies/raw/2b17a2413bd86b2cf9b03823637108851e4ddf2d/inputs/vision/robot_153.jpg"
-    )
+    download_url_1 = "https://github.com/nvidia-cosmos/cosmos-dependencies/raw/2b17a2413bd86b2cf9b03823637108851e4ddf2d/inputs/vision/robot_153.jpg"
     file_size_1 = 279410
 
     download_url_2 = "https://github.com/nvidia-cosmos/cosmos-dependencies/raw/2b17a2413bd86b2cf9b03823637108851e4ddf2d/inputs/vision/bus_terminal.jpg"

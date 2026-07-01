@@ -63,7 +63,6 @@ class RoboMINDFrankaDataset(ActionBaseDataset):
     initialization, and alternate viewpoints are omitted.
     """
 
-
     def __init__(
         self,
         root: str,

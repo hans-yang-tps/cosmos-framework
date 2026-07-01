@@ -556,8 +556,7 @@ class SoundDataOverrides(OverridesBase):
         if sample_meta.model_mode.is_sound_condition:
             if self.sound_path is None:
                 raise ValueError(
-                    f"model_mode={sample_meta.model_mode.value} requires a `sound_path` "
-                    "(a conditioning audio clip)"
+                    f"model_mode={sample_meta.model_mode.value} requires a `sound_path` (a conditioning audio clip)"
                 )
             self.enable_sound = True
         if self.enable_sound is None:
@@ -1049,9 +1048,7 @@ class OmniSampleOverrides(
 
         self._build_reasoner_data(model_config=model_config, sample_meta=sample_meta)
 
-        self._build_transfer_data(
-            model_config=model_config, sample_meta=sample_meta, user_fields=user_fields
-        )
+        self._build_transfer_data(model_config=model_config, sample_meta=sample_meta, user_fields=user_fields)
 
         if not shift_configured and not sample_meta.model_mode.is_reasoner:
             model_size = self._VLM_MODEL_SIZE[model_config.vlm_config.model_name]
@@ -1297,6 +1294,7 @@ def _get_device_memory_bytes() -> int:
         # Fallback for unified memory architectures (e.g., GB10) where
         # nvmlDeviceGetMemoryInfo is not supported.
         import torch
+
         if torch.cuda.is_available():
             return int(torch.cuda.get_device_properties(0).total_memory)
         return 128 * 1024**3  # Default 128GB

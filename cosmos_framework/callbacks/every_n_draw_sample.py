@@ -18,9 +18,9 @@ from einops import rearrange
 
 from cosmos_framework.callbacks.every_n import EveryN
 from cosmos_framework.model._base import ImaginaireModel
+from cosmos_framework.tools.visualize.video import save_img_or_video
 from cosmos_framework.utils import distributed, log, misc
 from cosmos_framework.utils.easy_io import easy_io
-from cosmos_framework.tools.visualize.video import save_img_or_video
 from cosmos_framework.utils.vfm.data_utils import slice_data_batch
 
 

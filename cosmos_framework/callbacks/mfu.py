@@ -17,15 +17,15 @@ from decimal import Decimal
 import torch
 import wandb
 
-from cosmos_framework.model.attention.utils import is_blackwell_dc
 from cosmos_framework.callbacks.every_n import EveryN
+from cosmos_framework.model._base import ImaginaireModel
+from cosmos_framework.model.attention.utils import is_blackwell_dc
 from cosmos_framework.tools.flops import (
     OmniMoTModelDescriptor,
     compute_omni_mot_flops_per_batch,
     compute_wan_vae_encoder_flops,
     get_omni_mot_model_descriptor,
 )
-from cosmos_framework.model._base import ImaginaireModel
 from cosmos_framework.trainer import ImaginaireTrainer
 from cosmos_framework.utils import log
 from cosmos_framework.utils.distributed import rank0_only

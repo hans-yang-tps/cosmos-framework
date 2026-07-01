@@ -22,7 +22,6 @@ from cosmos_framework.model.attention.utils.environment import (
 from cosmos_framework.model.attention.utils.safe_ops import log
 from cosmos_framework.model.attention.utils.safe_ops.functools import lru_cache
 
-
 BACKEND_CHECK_MAP = {
     "natten": natten_attention_check,
     "flash2": flash2_attention_check,

@@ -5,9 +5,9 @@ import os
 
 from omegaconf import OmegaConf, omegaconf
 
+from cosmos_framework.utils.callback import OneLoggerCallback
 from cosmos_framework.utils.lazy_config import PLACEHOLDER
 from cosmos_framework.utils.lazy_config import LazyCall as L
-from cosmos_framework.utils.callback import OneLoggerCallback
 from cosmos_framework.utils.log import logger
 
 

@@ -8,11 +8,10 @@ each DataLoader worker. The canonical training dataloader.
 
 from __future__ import annotations
 
+import numpy as np
 import torch
 import torch.utils.data
-import numpy as np
 
-from cosmos_framework.utils import log
 from cosmos_framework.data.vfm.dataflow.base import (
     BatchCollator,
     DataDistributor,
@@ -21,6 +20,7 @@ from cosmos_framework.data.vfm.dataflow.base import (
 )
 from cosmos_framework.data.vfm.dataflow.batchers import SimpleBatcher
 from cosmos_framework.data.vfm.dataflow.collators import DefaultBatchCollator
+from cosmos_framework.utils import log
 
 
 class _DataflowIterableDataset(torch.utils.data.IterableDataset):
@@ -119,9 +119,7 @@ class CosmosDataLoader(torch.utils.data.DataLoader):
         parallel_dims=None,
     ):
         if batch_size is not None and batcher is not None:
-            raise ValueError(
-                "Pass either batch_size= (sugar) or an explicit batcher=, not both."
-            )
+            raise ValueError("Pass either batch_size= (sugar) or an explicit batcher=, not both.")
         if batch_size is None and batcher is None:
             raise ValueError("Provide either a batcher= or a batch_size=.")
         if batch_size is not None:
@@ -203,9 +201,7 @@ class JointCosmosDataLoader:
         seed: int = 42,
     ) -> None:
         entries = [
-            (name, cfg["dataloader"], cfg["ratio"])
-            for name, cfg in dataloaders.items()
-            if cfg.get("ratio", 0) > 0
+            (name, cfg["dataloader"], cfg["ratio"]) for name, cfg in dataloaders.items() if cfg.get("ratio", 0) > 0
         ]
         if not entries:
             raise ValueError("JointCosmosDataLoader: no dataloaders with ratio > 0")

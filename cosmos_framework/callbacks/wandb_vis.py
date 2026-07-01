@@ -12,8 +12,8 @@ import torch
 import wandb
 from einops import rearrange
 
-from cosmos_framework.utils.config import JobConfig
 from cosmos_framework.utils import callback, distributed
+from cosmos_framework.utils.config import JobConfig
 from cosmos_framework.utils.easy_io import easy_io
 
 

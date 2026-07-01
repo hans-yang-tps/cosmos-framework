@@ -135,8 +135,7 @@ class ActionBaseDataset(ABC, Dataset):
     def load_action_stats(cls) -> dict[str, torch.Tensor]:
         """Return action normalization stats for this dataset as torch tensors."""
         return {
-            key: torch.from_numpy(value).float()
-            for key, value in load_action_stats(str(cls._stats_path())).items()
+            key: torch.from_numpy(value).float() for key, value in load_action_stats(str(cls._stats_path())).items()
         }
 
     @abstractmethod

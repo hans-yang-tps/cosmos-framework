@@ -11,13 +11,13 @@ import wandb
 import wandb.util
 from omegaconf import DictConfig
 
-from cosmos_framework.utils.lazy_config.lazy import LazyConfig
 from cosmos_framework.utils import distributed, log, object_store
 from cosmos_framework.utils.easy_io import easy_io
+from cosmos_framework.utils.lazy_config.lazy import LazyConfig
 
 if TYPE_CHECKING:
-    from cosmos_framework.utils.config import CheckpointConfig, Config, JobConfig
     from cosmos_framework.model._base import ImaginaireModel
+    from cosmos_framework.utils.config import CheckpointConfig, Config, JobConfig
 
 JOB_INFO = {}
 

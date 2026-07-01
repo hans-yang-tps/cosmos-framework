@@ -99,6 +99,7 @@ def _free_port() -> int:
         s.bind(("", 0))
         return s.getsockname()[1]
 
+
 # --- per-arch input paths ----------------------------------------------------
 #
 # GB200: the original input snapshot lived on an internal read-only filesystem
@@ -129,8 +130,13 @@ def _convert_nano_dcp(dest: Path) -> None:
     env["PYTHONPATH"] = f".:{env.get('PYTHONPATH', '')}"
     result = subprocess.run(
         [
-            sys.executable, "-m", "cosmos_framework.scripts.convert_model_to_dcp",
-            "-o", str(dest), "--checkpoint-path", "Cosmos3-Nano",
+            sys.executable,
+            "-m",
+            "cosmos_framework.scripts.convert_model_to_dcp",
+            "-o",
+            str(dest),
+            "--checkpoint-path",
+            "Cosmos3-Nano",
         ],
         cwd=str(REPO_ROOT),
         env=env,
@@ -178,12 +184,8 @@ _DEFAULT_ATOL = 1e-3
 _VLM_LOSS_RE = re.compile(r"train/loss_avg:\s+([0-9.eE+-]+)\s+\(iteration\s+\d+\)")
 # VFM logs per-rank loss via the IterSpeed callback's on_training_step_end:
 #     [RANK 0] Iteration 1: Hit counter: 1/50 | Loss: 0.2515 | Time: 120.42s
-_VFM_LOSS_RE = re.compile(
-    r"\[RANK\s+0\]\s+Iteration\s+\d+:\s+Hit counter:[^|]+\|\s+Loss:\s+([0-9.eE+-]+)"
-)
-_GRAD_NORM_RE = re.compile(
-    r"\[RANK\s+0\][^\n]*clip_grad_norm/(?:[^/]+/)?global:\s+([0-9.eE+-]+)\s+\(iteration\s+\d+\)"
-)
+_VFM_LOSS_RE = re.compile(r"\[RANK\s+0\]\s+Iteration\s+\d+:\s+Hit counter:[^|]+\|\s+Loss:\s+([0-9.eE+-]+)")
+_GRAD_NORM_RE = re.compile(r"\[RANK\s+0\][^\n]*clip_grad_norm/(?:[^/]+/)?global:\s+([0-9.eE+-]+)\s+\(iteration\s+\d+\)")
 
 
 @dataclass(frozen=True)
@@ -446,12 +448,20 @@ def h100_inputs(tmp_path_factory: pytest.TempPathFactory):
 
     _ensure(
         "DATASET_PATH",
-        lambda: Path(
-            _hf_download(
-                ["--repo-type", "dataset", "nvidia/bridge-v2-subset-synthetic-captions",
-                 "--revision", _BRIDGE_REVISION]
+        lambda: (
+            Path(
+                _hf_download(
+                    [
+                        "--repo-type",
+                        "dataset",
+                        "nvidia/bridge-v2-subset-synthetic-captions",
+                        "--revision",
+                        _BRIDGE_REVISION,
+                    ]
+                )
             )
-        ) / "sft_dataset_bridge",
+            / "sft_dataset_bridge"
+        ),
     )
     _ensure("WAN_VAE_PATH", lambda: _hf_download(["Wan-AI/Wan2.2-TI2V-5B", "Wan2.2_VAE.pth"]))
     _ensure("MODEL_PATH", lambda: _hf_download(["Qwen/Qwen3-VL-8B-Instruct", "--revision", _QWEN_VL_REVISION]))
@@ -525,9 +535,7 @@ def _assert_spec_matches_goldens(spec_key: str, tmp_path: Path, paths: dict[str,
     start = 0
     for count, rtol, atol in bands:
         end = start + count
-        assert loss[start:end] == pytest.approx(
-            expected["loss"][start:end], rel=rtol, abs=atol
-        ), (
+        assert loss[start:end] == pytest.approx(expected["loss"][start:end], rel=rtol, abs=atol), (
             f"{spec.key} ({arch}): rank-0 loss[{start}:{end}] (rel/abs={rtol}) "
             f"does not match goldens\n"
             f"  got     : {loss[start:end]}\n"
@@ -538,9 +546,7 @@ def _assert_spec_matches_goldens(spec_key: str, tmp_path: Path, paths: dict[str,
     # global-norm all-reduce isn't bit-exact on this arch.
     if expected["grad_norm"] is None:
         return
-    assert grad_norm[:n] == pytest.approx(
-        expected["grad_norm"][:n], rel=spec.loss_rtol, abs=spec.loss_atol
-    ), (
+    assert grad_norm[:n] == pytest.approx(expected["grad_norm"][:n], rel=spec.loss_rtol, abs=spec.loss_atol), (
         f"{spec.key} ({arch}): global grad-norm[:{n}] does not match goldens\n"
         f"  got     : {grad_norm[:n]}\n"
         f"  expected: {expected['grad_norm'][:n]}{run_detail}"
@@ -564,9 +570,7 @@ if MAX_GPUS == 8:
     @pytest.mark.skip(reason="vision_sft_super spec disabled")
     @pytest.mark.level(2)
     @pytest.mark.gpus(8)
-    @pytest.mark.parametrize(
-        "spec_key", _SPEC_KEYS_8GPU, ids=lambda k: k.removeprefix("launch_")
-    )
+    @pytest.mark.parametrize("spec_key", _SPEC_KEYS_8GPU, ids=lambda k: k.removeprefix("launch_"))
     def test_launch_regression_8gpu(spec_key: str, tmp_path: Path, h100_inputs: dict[str, str]) -> None:
         """8-GPU variant for ``vision_sft_super`` (dp_shard=4 × cp=2)."""
         _assert_spec_matches_goldens(spec_key, tmp_path, h100_inputs)
@@ -582,8 +586,16 @@ _GOLDENS: dict[str, dict[str, dict[str, list[float] | None]]] = {
         "llava_ov": {
             "loss": [1.32208, 1.20886, 1.39254, 1.40460, 1.16652, 1.24852, 1.38463, 1.22766, 0.96263, 1.14468],
             "grad_norm": [
-                38.62454, 23.61477, 30.53218, 36.46255, 25.06240,
-                39.70305, 48.52226, 52.18334, 22.77521, 25.06970,
+                38.62454,
+                23.61477,
+                30.53218,
+                36.46255,
+                25.06240,
+                39.70305,
+                48.52226,
+                52.18334,
+                22.77521,
+                25.06970,
             ],
         },
         # Recaptured 2026-06-25 on a 4 × NVIDIA GB200 node with seed 42 against the

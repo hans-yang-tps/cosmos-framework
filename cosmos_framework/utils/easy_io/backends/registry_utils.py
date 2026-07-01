@@ -4,10 +4,10 @@
 import inspect
 from typing import Optional, Type, Union
 
-from cosmos_framework.utils.flags import TRAINING
 from cosmos_framework.utils.easy_io.backends.base_backend import BaseStorageBackend
 from cosmos_framework.utils.easy_io.backends.http_backend import HTTPBackend
 from cosmos_framework.utils.easy_io.backends.local_backend import LocalBackend
+from cosmos_framework.utils.flags import TRAINING
 
 backends: dict = {}
 prefix_to_backends: dict = {}

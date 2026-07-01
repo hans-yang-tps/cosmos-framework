@@ -298,7 +298,6 @@ def generate_natten_metadata(
             over layers (nn.ModuleList).
     """
 
-
     if token_shapes is None or len(token_shapes) < 1:
         raise ValueError("'token_shapes' is required for 'three_way' attention.")
 

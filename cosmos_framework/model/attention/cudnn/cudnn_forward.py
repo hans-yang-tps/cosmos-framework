@@ -45,7 +45,6 @@ def get_dtype_choices(arch_tag: int) -> dict:
         log.debug("cuDNN Attention is not supported because compute capability is below the minimum (8.0).")
         return {}
 
-
     log.debug(f"cuDNN Attention only supports FP16 and BF16 for {arch_tag=}.")
     return {
         torch.float16: cudnn.data_type.HALF,

@@ -56,7 +56,6 @@ def submit(args: Args):
     args.output_dir.mkdir(parents=True, exist_ok=True)
     sample_args_list = OmniSampleOverrides.from_files(args.input_files, overrides=args.overrides)
 
-
     for i_sample, sample_args in enumerate(sample_args_list):
         assert sample_args.name
         log.info(f"[{i_sample + 1}/{len(sample_args_list)}] Submitting sample '{sample_args.name}'")

@@ -9,8 +9,8 @@ from PIL import Image
 from transformers.processing_utils import VideosKwargs
 from transformers.video_utils import VideoMetadata
 
-from cosmos_framework.utils import log
 from cosmos_framework.data.vfm.processors.base import BaseVLMProcessor, convert_string_content_to_list_content
+from cosmos_framework.utils import log
 
 nemotron_chat_template = """
 {%- set ns = namespace(enable_thinking=false, has_sys_prompt=false, non_tool_system_content='', has_video=false, explicit_think_requested=false) -%}
@@ -227,9 +227,7 @@ def maybe_parse_vision_content(
     return num_video, video_fps, video_total_num_frames, video_frames_indices, video_frames, num_image, images
 
 
-class NemotronVLProcessor(
-    BaseVLMProcessor
-):
+class NemotronVLProcessor(BaseVLMProcessor):
     """Wrapper around the HuggingFace ``AutoProcessor`` for NVIDIA-Nemotron-Nano-VL."""
 
     VISION_END_TOKEN: Optional[str] = "</img>"

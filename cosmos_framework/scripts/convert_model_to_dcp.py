@@ -30,7 +30,6 @@ from cosmos_framework.inference.common.public_model_config import build_public_m
 from cosmos_framework.inference.model import Cosmos3OmniConfig, Cosmos3OmniModel
 from cosmos_framework.utils.checkpoint_db import _CHECKPOINTS
 
-
 _AVAE_REGISTRY_URI = "s3://bucket/pretrained/tokenizers/audio/avae"
 
 

@@ -35,13 +35,13 @@ except ImportError:  # Older filelock versions in some inference containers.
 
 from torch.distributed.checkpoint.filesystem import FileSystemReader, FileSystemWriter
 
+from cosmos_framework.checkpoint.dcp import CustomLoadPlanner, CustomSavePlanner, ModelWrapper
 from cosmos_framework.checkpoint.s3_filesystem import S3StorageReader
-from cosmos_framework.utils.lazy_config import instantiate
+from cosmos_framework.model.vfm.utils.safetensors_loader import load_vfm_model
 from cosmos_framework.utils import log, misc
 from cosmos_framework.utils.config_helper import get_config_module, override
 from cosmos_framework.utils.easy_io import easy_io
-from cosmos_framework.checkpoint.dcp import CustomLoadPlanner, CustomSavePlanner, ModelWrapper
-from cosmos_framework.model.vfm.utils.safetensors_loader import load_vfm_model
+from cosmos_framework.utils.lazy_config import instantiate
 
 ###################################################
 # below are the load_model function for inference #
@@ -397,6 +397,9 @@ def load_model_from_checkpoint(
     if hasattr(config.model.config, "load_teacher_weights"):
         log.info("Setting load_teacher_weights=False for inference to skip teacher checkpoint download.")
         config.model.config.load_teacher_weights = False
+    if getattr(config.model.config, "student_load_from", None) is not None:
+        log.info("Setting student_load_from=None for inference to skip train-time student warm-start download.")
+        config.model.config.student_load_from = None
 
     if (
         config.model.config.exclude_reasoner_weights_from_checkpoint

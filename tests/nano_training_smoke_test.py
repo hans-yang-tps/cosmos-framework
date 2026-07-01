@@ -58,9 +58,7 @@ _LAUNCHER = "tests/launch_sft_vision_nano_5iter.sh"
 
 # rank-0 per-iteration loss from the IterSpeed callback, e.g.
 #   [RANK 0] Iteration 1: Hit counter: 1/50 | Loss: 0.2302 | Time: ...
-_RANK0_LOSS_RE = re.compile(
-    r"\[RANK\s+0\]\s+Iteration\s+\d+:\s+Hit counter:[^|]+\|\s+Loss:\s+([-+0-9.eE]+)"
-)
+_RANK0_LOSS_RE = re.compile(r"\[RANK\s+0\]\s+Iteration\s+\d+:\s+Hit counter:[^|]+\|\s+Loss:\s+([-+0-9.eE]+)")
 
 
 def _free_port() -> int:
@@ -86,8 +84,13 @@ def _run(cmd: list[str], log_file: Path, extra_env: dict | None = None) -> tuple
     captured: list[str] = []
     with log_file.open("w") as fp:
         proc = subprocess.Popen(
-            cmd, env=env, cwd=str(REPO_ROOT),
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1,
+            cmd,
+            env=env,
+            cwd=str(REPO_ROOT),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            bufsize=1,
         )
         assert proc.stdout is not None
         for line in proc.stdout:
@@ -104,10 +107,17 @@ def _ensure_inputs(log_dir: Path) -> None:
     if not (_DATASET_PATH / "train" / "video_dataset_file.jsonl").is_file():
         rc, out = _run(
             [
-                "uvx", "hf@latest", "download", "--repo-type", "dataset",
+                "uvx",
+                "hf@latest",
+                "download",
+                "--repo-type",
+                "dataset",
                 "nvidia/bridge-v2-subset-synthetic-captions",
-                "--revision", _DATASET_REVISION,
-                "--local-dir", str(_DATA_DIR), "--quiet",
+                "--revision",
+                _DATASET_REVISION,
+                "--local-dir",
+                str(_DATA_DIR),
+                "--quiet",
             ],
             log_dir / "download_dataset.log",
         )
@@ -119,8 +129,14 @@ def _ensure_inputs(log_dir: Path) -> None:
     if not _WAN_VAE.is_file():
         rc, out = _run(
             [
-                "uvx", "hf@latest", "download", "Wan-AI/Wan2.2-TI2V-5B", "Wan2.2_VAE.pth",
-                "--local-dir", str(_WAN_VAE.parent), "--quiet",
+                "uvx",
+                "hf@latest",
+                "download",
+                "Wan-AI/Wan2.2-TI2V-5B",
+                "Wan2.2_VAE.pth",
+                "--local-dir",
+                str(_WAN_VAE.parent),
+                "--quiet",
             ],
             log_dir / "download_wan_vae.log",
         )
@@ -134,9 +150,13 @@ def _ensure_dcp(log_dir: Path) -> None:
         return
     rc, out = _run(
         [
-            "python", "-m", "cosmos_framework.scripts.convert_model_to_dcp",
-            "--checkpoint-path", "Cosmos3-Nano",
-            "-o", str(_DCP_DIR),
+            "python",
+            "-m",
+            "cosmos_framework.scripts.convert_model_to_dcp",
+            "--checkpoint-path",
+            "Cosmos3-Nano",
+            "-o",
+            str(_DCP_DIR),
         ],
         log_dir / "convert_to_dcp.log",
     )
@@ -211,8 +231,7 @@ def _assert_dcp_complete(dcp_root: Path) -> None:
         if stored:  # skip only if storage keys don't expose fqn
             unstored = sorted(declared - stored)
             assert not unstored, (
-                f"DCP {meta.parent}: {len(unstored)} declared tensor(s) have no storage "
-                f"(omitted): {unstored[:10]}"
+                f"DCP {meta.parent}: {len(unstored)} declared tensor(s) have no storage (omitted): {unstored[:10]}"
             )
 
 
@@ -332,10 +351,15 @@ if MAX_GPUS == 8:
         export_dir = run_dir / "model"
         rc, out = _run(
             [
-                "python", "-m", "cosmos_framework.scripts.export_model",
-                "--checkpoint-path", str(ckpt),
-                "--config-file", str(config_yaml),
-                "-o", str(export_dir),
+                "python",
+                "-m",
+                "cosmos_framework.scripts.export_model",
+                "--checkpoint-path",
+                str(ckpt),
+                "--config-file",
+                str(config_yaml),
+                "-o",
+                str(export_dir),
             ],
             tmp_path / "export.log",
         )
@@ -346,12 +370,18 @@ if MAX_GPUS == 8:
         infer_out = tmp_path / "exported_out"
         rc, out = _run(
             [
-                "torchrun", "--nproc_per_node=8", f"--master_port={_free_port()}",
-                "-m", "cosmos_framework.scripts.inference",
+                "torchrun",
+                "--nproc_per_node=8",
+                f"--master_port={_free_port()}",
+                "-m",
+                "cosmos_framework.scripts.inference",
                 "--parallelism-preset=throughput",
-                "-i", "inputs/omni/t2i.json",
-                "-o", str(infer_out),
-                "--checkpoint-path", str(export_dir),
+                "-i",
+                "inputs/omni/t2i.json",
+                "-o",
+                str(infer_out),
+                "--checkpoint-path",
+                str(export_dir),
                 "--seed=0",
             ],
             tmp_path / "infer.log",

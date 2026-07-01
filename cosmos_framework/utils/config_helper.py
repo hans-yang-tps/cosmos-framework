@@ -18,8 +18,8 @@ from hydra.core.config_store import ConfigStore
 from hydra.core.global_hydra import GlobalHydra
 from omegaconf import DictConfig, OmegaConf
 
-from cosmos_framework.utils.config import Config
 from cosmos_framework.utils import log
+from cosmos_framework.utils.config import Config
 
 _HYDRA_LOCK = threading.RLock()
 

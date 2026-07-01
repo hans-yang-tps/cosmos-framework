@@ -3,9 +3,9 @@
 
 import numpy as np
 
+from cosmos_framework.auxiliary.guardrail.common import presets
 from cosmos_framework.inference.common.args import GuardrailArgs
 from cosmos_framework.inference.common.inference import GuardrailRunners
-from cosmos_framework.auxiliary.guardrail.common import presets
 
 
 def test_guardrail_runners():

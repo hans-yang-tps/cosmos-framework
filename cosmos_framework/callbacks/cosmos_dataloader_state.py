@@ -171,8 +171,7 @@ class JointCosmosDataLoaderStateCallback(Callback):
         super().__init__()
         self._outer = outer_loader
         self._inner: dict[str, CosmosDataLoaderStateCallback] = {
-            name: CosmosDataLoaderStateCallback(name=name)
-            for name in outer_loader._names
+            name: CosmosDataLoaderStateCallback(name=name) for name in outer_loader._names
         }
         self.config: Any = None
 

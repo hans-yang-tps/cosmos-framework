@@ -57,9 +57,7 @@ def test_inject_sound_conditions_sound_and_preserves_image():
     audio = torch.zeros(1, 2, 96000)
     batch = {
         "video": [video],
-        "sequence_plan": [
-            SequencePlan(has_text=True, has_vision=True, condition_frame_indexes_vision=[0])
-        ],
+        "sequence_plan": [SequencePlan(has_text=True, has_vision=True, condition_frame_indexes_vision=[0])],
     }
 
     inject_sound_into_batch(batch, audio, model, condition_sound=True)
@@ -67,7 +65,7 @@ def test_inject_sound_conditions_sound_and_preserves_image():
     plan = batch["sequence_plan"][0]
     assert plan.has_sound is True
     assert plan.condition_frame_indexes_sound == list(range(50))  # all sound conditioned (ts2v)
-    assert plan.condition_frame_indexes_vision == [0]              # image cond preserved
+    assert plan.condition_frame_indexes_vision == [0]  # image cond preserved
 
 
 def test_inject_sound_default_generates_sound():
@@ -76,9 +74,7 @@ def test_inject_sound_default_generates_sound():
     audio = torch.zeros(1, 2, 96000)
     batch = {
         "video": [video],
-        "sequence_plan": [
-            SequencePlan(has_text=True, has_vision=True, condition_frame_indexes_vision=[])
-        ],
+        "sequence_plan": [SequencePlan(has_text=True, has_vision=True, condition_frame_indexes_vision=[])],
     }
 
     inject_sound_into_batch(batch, audio, model)  # default condition_sound=False

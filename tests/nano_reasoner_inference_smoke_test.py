@@ -81,8 +81,13 @@ def _run(cmd: list[str], log_file: Path, extra_env: dict[str, str] | None = None
     captured: list[str] = []
     with log_file.open("w") as fp:
         proc = subprocess.Popen(
-            cmd, env=env, cwd=str(REPO_ROOT),
-            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1,
+            cmd,
+            env=env,
+            cwd=str(REPO_ROOT),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            bufsize=1,
         )
         assert proc.stdout is not None
         for line in proc.stdout:

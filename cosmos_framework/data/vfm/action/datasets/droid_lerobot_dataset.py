@@ -37,9 +37,9 @@ _STATE_FEATURE = "observation.state.cartesian_position"
 # DROIDLeRobotDataset(action_space="joint_pos", use_state=...). These are
 # absolute joint commands/states (no normalization is applied for joint_pos,
 # matching the internal canonical run which leaves action_normalization=None).
-_JOINT_ACTION_FEATURE = "action.joint_position"          # [7] commanded joints
-_ACTION_GRIPPER_FEATURE = "action.gripper_position"      # [1] commanded gripper
-_JOINT_STATE_FEATURE = "observation.state.joint_positions"   # [7] observed joints
+_JOINT_ACTION_FEATURE = "action.joint_position"  # [7] commanded joints
+_ACTION_GRIPPER_FEATURE = "action.gripper_position"  # [1] commanded gripper
+_JOINT_STATE_FEATURE = "observation.state.joint_positions"  # [7] observed joints
 _GRIPPER_STATE_FEATURE = "observation.state.gripper_position"  # [1] observed gripper
 # Columns whose parquet dtype is a list<float> (need to_pylist -> stacked array).
 _LIST_COLUMNS = {_STATE_FEATURE, _JOINT_ACTION_FEATURE, _JOINT_STATE_FEATURE}
@@ -128,7 +128,12 @@ class DROIDLeRobotDataset(ActionBaseDataset):
         # (~1 GB total) -- read-only after init, so worker forks share them
         # copy-on-write.
         if action_space == "joint_pos":
-            feature_cols = [_JOINT_ACTION_FEATURE, _ACTION_GRIPPER_FEATURE, _JOINT_STATE_FEATURE, _GRIPPER_STATE_FEATURE]
+            feature_cols = [
+                _JOINT_ACTION_FEATURE,
+                _ACTION_GRIPPER_FEATURE,
+                _JOINT_STATE_FEATURE,
+                _GRIPPER_STATE_FEATURE,
+            ]
         else:
             feature_cols = [_STATE_FEATURE, _ACTION_GRIPPER_FEATURE]
         columns = ["index", "episode_index", "task_index", "timestamp", *feature_cols]
@@ -150,9 +155,7 @@ class DROIDLeRobotDataset(ActionBaseDataset):
         self._row_task = np.concatenate(task_parts).astype(np.int64)[order]
         self._row_timestamp = np.concatenate(ts_parts).astype(np.float64)[order]
         # Per-feature arrays keyed by parquet column name (read-only after init).
-        self._feat = {
-            c: np.concatenate(feature_parts[c], axis=0).astype(np.float32)[order] for c in feature_cols
-        }
+        self._feat = {c: np.concatenate(feature_parts[c], axis=0).astype(np.float32)[order] for c in feature_cols}
 
         # Group frames into episodes and keep only within-episode chunk windows.
         # The global frame index is ordered by episode in LeRobot v3, so episodes
@@ -340,9 +343,7 @@ class DROIDLeRobotDataset(ActionBaseDataset):
 
         initial_pose = torch.from_numpy(poses_abs[0].copy()).float()
         poses_rel = pose_abs_to_rel(poses_abs, rotation_format="rot6d", pose_convention=self._pose_convention)
-        gripper = np.asarray(
-            [row[_ACTION_GRIPPER_FEATURE] for row in action_rows], dtype=np.float32
-        ).reshape(-1, 1)
+        gripper = np.asarray([row[_ACTION_GRIPPER_FEATURE] for row in action_rows], dtype=np.float32).reshape(-1, 1)
         gripper = 1.0 - gripper
         action = np.concatenate([poses_rel[-self._chunk_length :], gripper[-self._chunk_length :]], axis=-1)
         return torch.from_numpy(action).float(), initial_pose

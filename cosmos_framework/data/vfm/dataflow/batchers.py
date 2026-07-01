@@ -234,6 +234,7 @@ class SequentialPackingBatcher(SampleBatcher):
         #   - list of ints        → len(text_token_ids)
         #   - 2-D tensor [1,S]    → shape[1]  (mirrors original .shape[1] branch)
         import torch as _torch
+
         text_token_ids = sample["text_token_ids"]
         if isinstance(text_token_ids, list):
             if len(text_token_ids) > 0 and isinstance(text_token_ids[0], _torch.Tensor):

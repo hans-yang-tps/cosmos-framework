@@ -101,9 +101,7 @@ def load_conditioning_audio(
         elif cur_channels == 2 and audio_channels == 1:
             waveform = waveform.mean(dim=0, keepdim=True)
         else:
-            raise ValueError(
-                f"Cannot convert {cur_channels}-channel audio to {audio_channels} channels"
-            )
+            raise ValueError(f"Cannot convert {cur_channels}-channel audio to {audio_channels} channels")
 
     # Trim or zero-pad to num_samples.
     n = waveform.shape[-1]

@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: OpenMDW-1.1
 
-from cosmos_framework.utils.flags import TRAINING
 from cosmos_framework.utils.easy_io.handlers.base import BaseFileHandler
 from cosmos_framework.utils.easy_io.handlers.byte_handler import ByteHandler
 from cosmos_framework.utils.easy_io.handlers.csv_handler import CsvHandler
@@ -17,6 +16,7 @@ from cosmos_framework.utils.easy_io.handlers.torch_handler import TorchHandler
 from cosmos_framework.utils.easy_io.handlers.torchjit_handler import TorchJitHandler
 from cosmos_framework.utils.easy_io.handlers.txt_handler import TxtHandler
 from cosmos_framework.utils.easy_io.handlers.yaml_handler import YamlHandler
+from cosmos_framework.utils.flags import TRAINING
 
 file_handlers = {
     "json": JsonHandler(),

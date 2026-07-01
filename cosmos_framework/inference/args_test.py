@@ -209,6 +209,7 @@ def test_build_sound_data_rejects_model_without_sound_gen():
 
 def test_audio_image2video_conditions_image_and_sound(tmp_path: Path):
     import omegaconf
+
     from cosmos_framework.inference.common.config import structure_config
 
     setup_args = OmniSetupOverrides(

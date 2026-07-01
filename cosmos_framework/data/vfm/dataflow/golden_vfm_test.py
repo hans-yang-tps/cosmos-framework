@@ -26,11 +26,9 @@ Bookkeeping keys excluded from comparison:
 
 from __future__ import annotations
 
-import os
 import torch
 import torch.distributed as dist
 import torch.utils.data
-
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Deterministic stub dataset
@@ -40,20 +38,20 @@ import torch.utils.data
 # multiple samples actually pack per batch.
 _SAMPLE_SPECS = [
     (10, 1, 64, 64),
-    (5,  1, 32, 32),
-    (8,  2, 64, 64),
-    (3,  1, 32, 64),
+    (5, 1, 32, 32),
+    (8, 2, 64, 64),
+    (3, 1, 32, 64),
     (12, 1, 64, 64),
-    (6,  2, 32, 32),
-    (4,  1, 64, 32),
-    (9,  1, 32, 32),
-    (7,  2, 64, 32),
+    (6, 2, 32, 32),
+    (4, 1, 64, 32),
+    (9, 1, 32, 32),
+    (7, 2, 64, 32),
     (11, 1, 32, 64),
-    (2,  1, 32, 32),
+    (2, 1, 32, 32),
     (15, 1, 64, 64),
-    (5,  2, 32, 64),
-    (8,  1, 32, 32),
-    (6,  1, 64, 64),
+    (5, 2, 32, 64),
+    (8, 1, 32, 32),
+    (6, 1, 64, 64),
 ]
 
 
@@ -66,11 +64,13 @@ def _make_fixed_samples():
         text_token_ids = torch.arange(tlen, dtype=torch.long)
         # image_size: a small tensor exercising the _FLATTEN_LIST_KEYS path.
         image_size = torch.tensor([H, W], dtype=torch.long)
-        samples.append({
-            "video": video,
-            "text_token_ids": text_token_ids,
-            "image_size": image_size,
-        })
+        samples.append(
+            {
+                "video": video,
+                "text_token_ids": text_token_ids,
+                "image_size": image_size,
+            }
+        )
     return samples
 
 
@@ -121,6 +121,7 @@ _PACKER_KWARGS = dict(
 # ──────────────────────────────────────────────────────────────────────────────
 # Helpers
 # ──────────────────────────────────────────────────────────────────────────────
+
 
 def _setup_dist(monkeypatch):
     """Init a single-process gloo group; return True if we used gloo, False for monkeypatch.
@@ -185,18 +186,14 @@ def _assert_exact(legacy_val, new_val, key: str) -> None:
         assert type(legacy_val) == type(new_val), (
             f"key={key}: type mismatch: legacy={type(legacy_val)}, new={type(new_val)}"
         )
-        assert legacy_val == new_val, (
-            f"key={key}: value mismatch: legacy={legacy_val!r}, new={new_val!r}"
-        )
+        assert legacy_val == new_val, f"key={key}: value mismatch: legacy={legacy_val!r}, new={new_val!r}"
 
 
 def _compare_batches_exact(legacy: dict, new: dict, batch_idx: int) -> None:
     """Assert EXACT structural identity (including list[list[Tensor]] nesting)."""
     lk = _payload_keys(legacy)
     nk = _payload_keys(new)
-    assert lk == nk, (
-        f"Batch {batch_idx}: key mismatch: legacy={sorted(lk)}, new={sorted(nk)}"
-    )
+    assert lk == nk, f"Batch {batch_idx}: key mismatch: legacy={sorted(lk)}, new={sorted(nk)}"
     for key in sorted(lk):
         _assert_exact(legacy[key], new[key], f"batch[{batch_idx}][{key}]")
 
@@ -214,16 +211,16 @@ def test_vfm_golden_batches_match(monkeypatch):
     Asserts exact list[list[Tensor]] nesting for _MULTI_ITEM_KEYS (video, text_token_ids)
     and flat list[Tensor] for image_size — no nesting normalization.
     """
-    from cosmos_framework.data.vfm.joint_dataloader import (
-        PackingDataLoader,
-        RankPartitionedDataLoader,
-    )
     from cosmos_framework.data.vfm.dataflow import (
         CosmosDataLoader,
+        IdentityProcessor,
         RankPartitionedDistributor,
         SequentialPackingBatcher,
         VFMListCollator,
-        IdentityProcessor,
+    )
+    from cosmos_framework.data.vfm.joint_dataloader import (
+        PackingDataLoader,
+        RankPartitionedDataLoader,
     )
 
     # ── distributed bootstrap ──────────────────────────────────────────────
@@ -247,9 +244,7 @@ def test_vfm_golden_batches_match(monkeypatch):
         # ── new stack ─────────────────────────────────────────────────────
         stub_new = _FixedSFTDataset()
         new = CosmosDataLoader(
-            distributor=RankPartitionedDistributor(
-                {"video": {"dataset": stub_new, "ratio": 1}}
-            ),
+            distributor=RankPartitionedDistributor({"video": {"dataset": stub_new, "ratio": 1}}),
             processor=IdentityProcessor(),
             batcher=SequentialPackingBatcher(
                 max_sequence_length=_BUDGET,

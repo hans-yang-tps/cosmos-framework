@@ -103,7 +103,6 @@ class _FakeModelDeployment:
         )
 
 
-
 @pytest.mark.manual
 @pytest.mark.level(1)
 @pytest.mark.gpus(0)

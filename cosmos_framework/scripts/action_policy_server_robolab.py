@@ -171,8 +171,10 @@ def _validate_checkpoint(checkpoint_path: str, *, allow_dcp_checkpoint: bool) ->
     has_config = (checkpoint_dir / "config.json").exists()
     has_consolidated_safetensors = any(checkpoint_dir.glob("*.safetensors"))
     has_diffusers_safetensors_index = (checkpoint_dir / "model.safetensors.index.json").exists()
-    if not checkpoint_dir.is_dir() or not has_config or not (
-        has_consolidated_safetensors or has_diffusers_safetensors_index
+    if (
+        not checkpoint_dir.is_dir()
+        or not has_config
+        or not (has_consolidated_safetensors or has_diffusers_safetensors_index)
     ):
         raise ValueError(f"Invalid safetensors checkpoint directory: {checkpoint_dir}")
 

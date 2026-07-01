@@ -40,8 +40,8 @@ import torch
 import torch.distributed as dist
 import torch.utils.data
 
-from cosmos_framework.utils.lazy_config import instantiate
 from cosmos_framework.utils import log
+from cosmos_framework.utils.lazy_config import instantiate
 
 
 def _wrap_augmentor_func_as_generator(func, data):
@@ -62,6 +62,7 @@ def _run_augmentor_chain(data, augmentations):
     at OmegaConf resolver registration time. We inline the few-line wrapper so the
     local SFT loader needs only the OSS lazy_config module.
     """
+
     def _stamp_pre_aug(upstream):
         for sample in upstream:
             sample["_pre_aug_time"] = time.monotonic()

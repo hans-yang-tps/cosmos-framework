@@ -79,7 +79,6 @@ def _vfm_inner_collate(batch):
     # Handle standard list of samples
     elem = batch[0]
     if isinstance(elem, dict):
-
         # Some Action datasets add optional metadata keys (for example
         # ``additional_view_description`` for concat-view captions) only for a
         # subset of samples.  PyTorch can batch such samples together when
@@ -205,7 +204,7 @@ class VFMListCollator(BatchCollator):
         # list / tensor rules, then _update_output_batch-accumulate across the group.
         output_batch: dict = {}
         for s in samples:
-            collated = _vfm_inner_collate([s])      # verbatim custom_collate_fn copy
-            split = _split_one(collated)            # i=0 split (rules from _get_next_sample)
-            _accumulate(output_batch, split)        # _update_output_batch copy
+            collated = _vfm_inner_collate([s])  # verbatim custom_collate_fn copy
+            split = _split_one(collated)  # i=0 split (rules from _get_next_sample)
+            _accumulate(output_batch, split)  # _update_output_batch copy
         return output_batch

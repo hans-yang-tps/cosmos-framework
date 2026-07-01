@@ -10,11 +10,11 @@ import wandb
 from torch import nn
 from torch.distributed.tensor import DTensor
 
+from cosmos_framework.data.vfm.sequence_packing.runtime import get_gen_seq
 from cosmos_framework.model._base import ImaginaireModel
 from cosmos_framework.utils import distributed, log, misc
 from cosmos_framework.utils.callback import Callback
 from cosmos_framework.utils.easy_io import easy_io
-from cosmos_framework.data.vfm.sequence_packing.runtime import get_gen_seq
 
 try:
     from apex.contrib.layer_norm import FastLayerNorm
@@ -212,8 +212,8 @@ class NormMonitor(Callback):
 
     def _should_track_param(self, param_name: str) -> bool:
         """Check if parameter should be tracked based on naming conventions."""
-        # Track only generation tower params, exclude EMA params
-        return "moe_gen" in param_name and "net_ema" not in param_name
+        # Track generation tower params and und→gen cross-attention norms; exclude EMA params
+        return ("moe_gen" in param_name or "k_norm_und_for_gen" in param_name) and "net_ema" not in param_name
 
     def _compute_l2_stats(self, tensor: torch.Tensor, detach: bool = True) -> dict[str, torch.Tensor]:
         """Compute statistics (squared sum and max) for a tensor.

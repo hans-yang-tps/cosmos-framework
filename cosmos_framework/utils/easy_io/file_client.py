@@ -6,8 +6,8 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Generator, Iterator, Optional, Tuple, Union
 
-from cosmos_framework.utils.flags import TRAINING
 from cosmos_framework.utils.easy_io.backends import BaseStorageBackend, HTTPBackend, LocalBackend
+from cosmos_framework.utils.flags import TRAINING
 
 
 def is_filepath(filepath):

@@ -25,9 +25,9 @@ from typing import Literal
 
 import torch
 
+from cosmos_framework.model.vfm.omni_mot_model import OmniMoTModel
 from cosmos_framework.utils import log
 from cosmos_framework.utils.callback import Callback
-from cosmos_framework.model.vfm.omni_mot_model import OmniMoTModel
 
 
 class CompileTokenizer(Callback):

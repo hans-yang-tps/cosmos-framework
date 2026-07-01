@@ -5,20 +5,17 @@ import json
 import random
 from typing import Optional
 
-from cosmos_framework.data.imaginaire.webdataset.augmentors.v3_text_transforms import pad_and_resize
 from cosmos_framework.data.imaginaire.webdataset.augmentors.augmentor import Augmentor
+from cosmos_framework.data.imaginaire.webdataset.augmentors.v3_text_transforms import pad_and_resize
 from cosmos_framework.utils import log
+
+# COSMOS-RELEASE-END-IGNORE
 
 # For the qwen captions, we have 3 variants: short, medium, long
 # In addition, for synthetic data, we create prompt embeddings as well.
 # There is quite a bit of entropy in the way prompt data is saved.
 # Captions are saved as "prompts", while the corresponding embeddings are saved as "original_prompt"
 # This part will be cleaned after synthetic data is cleaned to be in the same format as real data.
-_CAPTION_EMBEDDING_KEY_MAPPING_IMAGES = {
-    "ai_v3p1": "ai_v3p1",
-    "qwen2p5_7b_v4": "qwen2p5_7b_v4",
-    "prompts": "qwen2p5_7b_v4",
-}
 _AVAILABLE_QWEN_CAPTIONS = ["qwen2p5_7b_short", "qwen2p5_7b_medium", "qwen2p5_7b_long"]
 _AVAILABLE_QWEN3_30B_A3B_CAPTIONS = [
     "qwen3_30b_a3b_short",
@@ -61,7 +58,7 @@ class TextTransformForImage(Augmentor):
         """
 
         caption_type = self.args["caption_type"]
-        embedding_key_in_dict = _CAPTION_EMBEDDING_KEY_MAPPING_IMAGES[caption_type]
+        embedding_key_in_dict = _CAPTION_EMBEDDING_KEY_MAPPING_IMAGES[caption_type]  # noqa: F821
         embedding_type = self.args["embedding_type"]
         embedding_input_key_prefix = "" if embedding_type == "t5_xxl" else "umt5_"
 

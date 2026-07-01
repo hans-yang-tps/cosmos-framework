@@ -63,7 +63,6 @@ class BridgeOrigLeRobotDataset(ActionBaseDataset):
     and quantile normalization.
     """
 
-
     def __init__(
         self,
         root: str,

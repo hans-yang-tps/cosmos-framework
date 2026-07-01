@@ -12,13 +12,13 @@ import torch
 import webdataset
 from torch.utils.data.dataloader import default_collate
 
-from cosmos_framework.utils.lazy_config import instantiate
-from cosmos_framework.utils import log
 from cosmos_framework.model.vfm.tokenizers.uniae.frame_math import (
     get_uniae_chunk_frames,
     get_uniae_latent_num_frames,
     normalize_uniae_chunk_frames,
 )
+from cosmos_framework.utils import log
+from cosmos_framework.utils.lazy_config import instantiate
 
 _TIMING_KEYS = {"_sample_time", "_aug_time", "_pre_aug_time", "_aug_step_times"}
 _BATCH_TIMING_KEYS = {
@@ -923,7 +923,8 @@ class PackingDataLoader(JointDataLoader):
 
                 current_sequence_length += num_tokens_in_current_sample
                 num_samples += 1
-                output["dataset_name"] = ds_name
+                # Allows the dataset name to be overridden by the sample itself.
+                output["dataset_name"] = output.get("dataset_name", ds_name)
                 self._update_output_batch(output_batch, output)
 
             for sample in reversed(skipped_samples):

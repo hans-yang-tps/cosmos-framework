@@ -20,11 +20,11 @@ import cosmos_framework.data.vfm.augmentors.text_tokenizer as text_tokenizer
 import cosmos_framework.data.vfm.augmentors.text_transforms_for_image as text_transforms_for_image
 import cosmos_framework.data.vfm.augmentors.text_transforms_for_video as text_transforms_for_video
 import cosmos_framework.data.vfm.augmentors.video_parsing as video_parsing
-from cosmos_framework.utils.lazy_config import LazyCall as L
-from cosmos_framework.utils.lazy_config import LazyDict
-from cosmos_framework.utils import log
 from cosmos_framework.data.vfm.augmentors import sequence_plan
 from cosmos_framework.data.vfm.utils import IMAGE_RES_SIZE_INFO, VIDEO_RES_SIZE_INFO
+from cosmos_framework.utils import log
+from cosmos_framework.utils.lazy_config import LazyCall as L
+from cosmos_framework.utils.lazy_config import LazyDict
 
 # UniAE requires spatial dimensions divisible by (spatial_compression * patch_spatial) = 16 * 2 = 32.
 UNIAE_SPATIAL_MULTIPLE = 32

@@ -12,8 +12,12 @@ from torch.distributed.checkpoint.state_dict import StateDictOptions, get_optimi
 from torch.distributed.checkpoint.stateful import Stateful
 from torch.optim.lr_scheduler import LambdaLR, LRScheduler
 
-from cosmos_framework.utils.functional.lr_scheduler import LambdaLinearScheduler, LambdaWarmUpCosineScheduler, WSDScheduler
 from cosmos_framework.utils import log
+from cosmos_framework.utils.functional.lr_scheduler import (
+    LambdaLinearScheduler,
+    LambdaWarmUpCosineScheduler,
+    WSDScheduler,
+)
 
 
 class ParamMetadata(NamedTuple):

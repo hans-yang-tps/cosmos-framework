@@ -65,9 +65,11 @@ def _pearson(xs, ys):
         return None
     try:
         from scipy.stats import pearsonr
+
         r = float(pearsonr(xs, ys).statistic)
     except ImportError:
         import numpy as np
+
         x = np.asarray(xs, dtype=float)
         y = np.asarray(ys, dtype=float)
         if x.std() == 0 or y.std() == 0:
@@ -101,6 +103,7 @@ def _init_distributed():
 def _barrier():
     try:
         import torch.distributed as dist
+
         if dist.is_available() and dist.is_initialized():
             dist.barrier()
     except Exception:
@@ -125,11 +128,7 @@ def _prepare_sample(sample_meta, val_root):
     conversation = json.loads(text_path.read_text())["conversations"]
     user_turns = [t for t in conversation if t.get("role") != "assistant"]
     gt_entry = next((t for t in conversation if t.get("role") == "assistant"), None)
-    gt_response = (
-        gt_entry["content"][0]["text"]
-        if gt_entry and isinstance(gt_entry.get("content"), list)
-        else None
-    )
+    gt_response = gt_entry["content"][0]["text"] if gt_entry and isinstance(gt_entry.get("content"), list) else None
     # Resolve the "video_0" placeholder in user content to the actual file path.
     for t in user_turns:
         content = t.get("content")
@@ -167,7 +166,9 @@ def _run_inference(args, rank, world_size, local_rank):
     if rank == 0:
         print(f"[infer] loading model from {args.hf_ckpt} on {device} ...", flush=True)
     model = Qwen3VLForConditionalGeneration.from_pretrained(
-        args.hf_ckpt, torch_dtype=torch.bfloat16, device_map=device,
+        args.hf_ckpt,
+        torch_dtype=torch.bfloat16,
+        device_map=device,
     )
     model.eval()
     processor = AutoProcessor.from_pretrained(args.hf_ckpt)
@@ -193,14 +194,19 @@ def _run_inference(args, rank, world_size, local_rank):
         if len(conversations) == 1:
             inputs = processor.apply_chat_template(
                 conversations[0],
-                add_generation_prompt=True, tokenize=True,
-                return_tensors="pt", return_dict=True,
+                add_generation_prompt=True,
+                tokenize=True,
+                return_tensors="pt",
+                return_dict=True,
             ).to(device)
         else:
             inputs = processor.apply_chat_template(
                 list(conversations),
-                add_generation_prompt=True, tokenize=True,
-                return_tensors="pt", return_dict=True, padding=True,
+                add_generation_prompt=True,
+                tokenize=True,
+                return_tensors="pt",
+                return_dict=True,
+                padding=True,
             ).to(device)
 
         with torch.inference_mode():
@@ -213,12 +219,17 @@ def _run_inference(args, rank, world_size, local_rank):
         responses = processor.batch_decode(new_ids, skip_special_tokens=True)
 
         for sample_id, video_path, response, gt in zip(ids, video_paths, responses, gts):
-            (out / f"{sample_id}.json").write_text(json.dumps({
-                "id": sample_id,
-                "video": str(video_path),
-                "model_response": response,
-                "ground_truth": gt,
-            }, indent=2))
+            (out / f"{sample_id}.json").write_text(
+                json.dumps(
+                    {
+                        "id": sample_id,
+                        "video": str(video_path),
+                        "model_response": response,
+                        "ground_truth": gt,
+                    },
+                    indent=2,
+                )
+            )
 
         if rank == 0:
             done = batch_start + len(valid)
@@ -297,22 +308,23 @@ def _compute_metrics(results_dir, summary_path):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("--results_dir", required=True,
-                   help="Per-sample JSON dir — output of inference, input to metrics")
-    p.add_argument("--summary", default=None,
-                   help="summary.json path (default: <results_dir>/summary.json)")
+    p.add_argument("--results_dir", required=True, help="Per-sample JSON dir — output of inference, input to metrics")
+    p.add_argument("--summary", default=None, help="summary.json path (default: <results_dir>/summary.json)")
     # Inference-mode args. Both required to enable the inference pass.
-    p.add_argument("--hf_ckpt", default=None,
-                   help="HF safetensors dir (e.g. .../hf_exports/iter_NNN/). "
-                        "If set, run inference first; else just aggregate from --results_dir.")
-    p.add_argument("--val_root", default=None,
-                   help="VideoPhy-2 val dir with meta.json + media/ + text/. "
-                        "Required when --hf_ckpt is set.")
-    p.add_argument("--n", type=int, default=None,
-                   help="Limit to first N val samples (default: all)")
+    p.add_argument(
+        "--hf_ckpt",
+        default=None,
+        help="HF safetensors dir (e.g. .../hf_exports/iter_NNN/). "
+        "If set, run inference first; else just aggregate from --results_dir.",
+    )
+    p.add_argument(
+        "--val_root",
+        default=None,
+        help="VideoPhy-2 val dir with meta.json + media/ + text/. Required when --hf_ckpt is set.",
+    )
+    p.add_argument("--n", type=int, default=None, help="Limit to first N val samples (default: all)")
     p.add_argument("--max_new_tokens", type=int, default=256)
-    p.add_argument("--batch_size", type=int, default=1,
-                   help="Per-rank generation batch size (default: 1).")
+    p.add_argument("--batch_size", type=int, default=1, help="Per-rank generation batch size (default: 1).")
     args = p.parse_args()
 
     results_dir = Path(args.results_dir)

@@ -19,7 +19,6 @@ from __future__ import annotations
 import torch
 import torchvision.transforms.functional as transforms_F
 
-from cosmos_framework.utils import log
 from cosmos_framework.data.vfm.action.action_processing import (
     ActionNormalizer,
     ActionProcessor,
@@ -30,8 +29,9 @@ from cosmos_framework.data.vfm.augmentors.duration_fps_text_timestamps import Du
 from cosmos_framework.data.vfm.augmentors.idle_frames_text_info import IdleFramesTextInfo
 from cosmos_framework.data.vfm.augmentors.resolution_text_info import ResolutionTextInfo
 from cosmos_framework.data.vfm.augmentors.text_tokenizer import TextTokenizerTransform
-from cosmos_framework.data.vfm.utils import VIDEO_RES_SIZE_INFO
 from cosmos_framework.data.vfm.sequence_packing import SequencePlan
+from cosmos_framework.data.vfm.utils import VIDEO_RES_SIZE_INFO
+from cosmos_framework.utils import log
 from cosmos_framework.utils.vfm.data_utils import get_vision_data_resolution
 
 

@@ -6,10 +6,10 @@ from typing import Callable, Optional
 import attrs
 import torch
 
-from cosmos_framework.utils.config import make_freezable
-from cosmos_framework.utils.progress_bar import progress_bar
 from cosmos_framework.model.vfm.diffusion.samplers.fm_solvers_unipc import FlowUniPCMultistepScheduler
 from cosmos_framework.model.vfm.diffusion.samplers.utils import run_multiseed
+from cosmos_framework.utils.config import make_freezable
+from cosmos_framework.utils.progress_bar import progress_bar
 
 
 @make_freezable

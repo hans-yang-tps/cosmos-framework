@@ -112,10 +112,7 @@ class UMILeRobotDataset(ActionBaseDataset):
     def load_action_stats(cls) -> dict[str, torch.Tensor]:
         # Stats file stores 20D bimanual layout (right + left arm).
         # Single-arm normalization uses only the first 10D (right arm).
-        raw = {
-            key: torch.from_numpy(value).float()
-            for key, value in load_action_stats(str(cls._stats_path())).items()
-        }
+        raw = {key: torch.from_numpy(value).float() for key, value in load_action_stats(str(cls._stats_path())).items()}
         return {key: tensor[:_SINGLE_ARM_ACTION_DIM] for key, tensor in raw.items()}
 
     def __getitem__(self, idx: int) -> dict[str, Any]:

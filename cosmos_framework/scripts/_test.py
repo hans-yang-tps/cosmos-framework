@@ -3,8 +3,6 @@
 
 from pathlib import Path
 
-import pytest
-
 from cosmos_framework.inference.fixtures.script import ScriptConfig, script_test
 
 _CURRENT_DIR = Path(__file__).parent.absolute()

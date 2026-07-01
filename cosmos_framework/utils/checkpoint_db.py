@@ -62,8 +62,8 @@ from typing import Annotated, Callable, TypeAlias
 import pydantic
 from typing_extensions import Self, override
 
-from cosmos_framework.utils.flags import EXPERIMENTAL_CHECKPOINTS, INTERNAL, StrEnum
 from cosmos_framework.utils import log
+from cosmos_framework.utils.flags import EXPERIMENTAL_CHECKPOINTS, INTERNAL, StrEnum
 
 HF_VERSION = "1.16.4"
 

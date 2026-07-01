@@ -13,6 +13,7 @@ import torch
 import torch.nn.functional as F
 from lerobot.datasets.video_utils import decode_video_frames
 
+from cosmos_framework.data.vfm.action.action_spec import ActionSpec, Gripper, Pos, Rot, build_action_spec
 from cosmos_framework.data.vfm.action.agibot_fk import (
     AGIBOT_WORLD_GRIPPER_TO_OPENCV_BY_WRIST,
     apply_agibot_gripper_to_opencv,
@@ -20,7 +21,6 @@ from cosmos_framework.data.vfm.action.agibot_fk import (
     compute_fk_transforms_batch,
     convert_gripper_state_to_open_fraction,
 )
-from cosmos_framework.data.vfm.action.action_spec import ActionSpec, Gripper, Pos, Rot, build_action_spec
 from cosmos_framework.data.vfm.action.datasets.base_dataset import ActionBaseDataset
 from cosmos_framework.data.vfm.action.pose_utils import pose_abs_to_rel
 
@@ -107,7 +107,6 @@ class AgiBotWorldBetaLeRobotDataset(ActionBaseDataset):
     By default this wrapper uses `concat_view`: head view on top, left/right
     wrist views resized and concatenated on the bottom.
     """
-
 
     def __init__(
         self,
@@ -213,7 +212,9 @@ class AgiBotWorldBetaLeRobotDataset(ActionBaseDataset):
         choose_prev = np.abs(timestamps[prev] - target_ts) <= np.abs(timestamps[indices] - target_ts)
         indices = np.where(choose_prev, prev, indices)
         if int(indices[-1]) <= start_frame:
-            raise IndexError(f"Could not select {self._chunk_length + 1} frames from episode {episode_id} at fps={self._fps}.")
+            raise IndexError(
+                f"Could not select {self._chunk_length + 1} frames from episode {episode_id} at fps={self._fps}."
+            )
         return [rows[int(i)] for i in indices]
 
     def _load_video(self, episode: dict[str, Any], observation_rows: list[dict[str, Any]]) -> torch.Tensor:
@@ -231,7 +232,9 @@ class AgiBotWorldBetaLeRobotDataset(ActionBaseDataset):
         right = self._load_video_key(episode, observation_rows, _HAND_RIGHT_KEY)
         return self._compose_multi_view(top, left, right)
 
-    def _load_video_key(self, episode: dict[str, Any], observation_rows: list[dict[str, Any]], key: str) -> torch.Tensor:
+    def _load_video_key(
+        self, episode: dict[str, Any], observation_rows: list[dict[str, Any]], key: str
+    ) -> torch.Tensor:
         timestamps = [float(row["timestamp"]) for row in observation_rows]
         return decode_video_frames(
             self._video_path(episode, key),

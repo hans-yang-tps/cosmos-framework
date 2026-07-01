@@ -15,9 +15,9 @@ from torch.distributed.checkpoint.state_dict import StateDictOptions, get_optimi
 from torch.distributed.checkpoint.stateful import Stateful
 from torch.optim.lr_scheduler import LambdaLR
 
+from cosmos_framework.utils import log
 from cosmos_framework.utils.config import make_freezable
 from cosmos_framework.utils.lazy_config import LazyDict
-from cosmos_framework.utils import log
 from cosmos_framework.utils.vlm.fused_adam import FusedAdam
 
 

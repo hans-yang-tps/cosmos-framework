@@ -171,7 +171,11 @@ def generate_multi_dim_varlen_parameters(
     """
     # For now, NATTEN is the only backend that supports varlen multi-dimensional attention
 
-    from cosmos_framework.model.attention.natten import NATTEN_VARLEN_MULTI_DIM_VERSION, natten_supported, natten_version_satisfies
+    from cosmos_framework.model.attention.natten import (
+        NATTEN_VARLEN_MULTI_DIM_VERSION,
+        natten_supported,
+        natten_version_satisfies,
+    )
 
     if not natten_supported():
         raise RuntimeError("generate_multi_dim_varlen_parameters requires NATTEN.")

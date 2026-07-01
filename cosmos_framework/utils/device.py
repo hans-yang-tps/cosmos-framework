@@ -84,7 +84,6 @@ def gpu0_has_80gb_or_less():
 
 
 class Device:
-
     _nvml_affinity_elements = math.ceil(os.cpu_count() / 64)  # type: ignore
 
     def __init__(self, device_idx: int):

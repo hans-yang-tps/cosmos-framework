@@ -9,8 +9,8 @@ import torch
 from einops import rearrange
 from torch import Tensor, nn
 
-from cosmos_framework.utils.easy_io import easy_io
 from cosmos_framework.model.vfm.tokenizers.interface import VideoTokenizerInterface
+from cosmos_framework.utils.easy_io import easy_io
 
 
 @dataclass

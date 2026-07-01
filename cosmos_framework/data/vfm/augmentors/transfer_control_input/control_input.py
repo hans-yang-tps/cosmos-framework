@@ -11,12 +11,12 @@ import torchvision.transforms.functional as transforms_F
 from pycocotools import mask as mask_utils
 
 from cosmos_framework.data.imaginaire.webdataset.augmentors.augmentor import Augmentor
-from cosmos_framework.utils import log
 from cosmos_framework.data.vfm.augmentors.transfer_control_input.blur import Blur, BlurConfig
 from cosmos_framework.data.vfm.augmentors.transfer_control_input.seg import (
     decode_partial_rle_width1,
     segmentation_color_mask,
 )
+from cosmos_framework.utils import log
 
 # Constants for segmentation color processing
 # These parameters control the color-based mask extraction process in AddControlInputSeg

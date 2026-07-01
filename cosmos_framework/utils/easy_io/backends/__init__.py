@@ -1,11 +1,11 @@
 # SPDX-FileCopyrightText: Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 # SPDX-License-Identifier: OpenMDW-1.1
 
-from cosmos_framework.utils.flags import TRAINING
 from cosmos_framework.utils.easy_io.backends.base_backend import BaseStorageBackend
 from cosmos_framework.utils.easy_io.backends.http_backend import HTTPBackend
 from cosmos_framework.utils.easy_io.backends.local_backend import LocalBackend
 from cosmos_framework.utils.easy_io.backends.registry_utils import backends, prefix_to_backends, register_backend
+from cosmos_framework.utils.flags import TRAINING
 
 __all__ = [
     "BaseStorageBackend",

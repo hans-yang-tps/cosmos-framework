@@ -14,13 +14,13 @@ from torchvision.transforms.v2 import Resize, UniformTemporalSubsample
 
 from cosmos_framework.data.imaginaire.webdataset.augmentors.augmentor import Augmentor
 from cosmos_framework.data.imaginaire.webdataset.augmentors.image.misc import obtain_augmentation_size
-from cosmos_framework.utils import log
 from cosmos_framework.data.vfm.utils import VIDEO_RES_SIZE_INFO
 from cosmos_framework.model.vfm.tokenizers.uniae.frame_math import (
     align_uniae_num_video_frames,
     get_uniae_chunk_frames,
     normalize_uniae_chunk_frames,
 )
+from cosmos_framework.utils import log
 
 # Map dataset_resolution_type to resolution tier key in VIDEO_RES_SIZE_INFO
 _DATASET_RESOLUTION_TIER: dict[str, str] = {"gt480p": "480", "gt720p": "720", "gt1080p": "1080"}

@@ -9,9 +9,9 @@ import time
 import torch
 from omegaconf import OmegaConf
 
-from cosmos_framework.utils.config import Config
 from cosmos_framework.utils import distributed, log
 from cosmos_framework.utils.cluster_env import get_cluster_env
+from cosmos_framework.utils.config import Config
 from cosmos_framework.utils.easy_io import easy_io
 from cosmos_framework.utils.env_parsers.cred_env_parser import CRED_ENVS
 from cosmos_framework.utils.wandb_util import set_wandb_job_info

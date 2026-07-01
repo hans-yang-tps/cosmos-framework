@@ -38,7 +38,6 @@ from cosmos_framework.inference.args import OmniSetupOverrides
 from cosmos_framework.inference.common.args import CheckpointOverrides, ResolvedPath
 from cosmos_framework.inference.model import Cosmos3OmniModel
 
-
 # Cosmos3 OmniMoT exposes its inner LM under ``net.language_model.*``; Qwen3VL
 # expects ``lm_head.*`` (top-level) and ``model.language_model.*`` (text-decoder
 # sub-tree of the VLM). The OmniMoT MoE-generation pathway (``*_moe_gen``) has
@@ -50,13 +49,13 @@ def _remap_to_qwen3vl(key: str) -> str | None:
     """Return the Qwen3VL VLM-shape key, or None if ``key`` should be dropped."""
     if not key.startswith(_OMNIMOT_LM_PREFIX):
         return None
-    inner = key[len(_OMNIMOT_LM_PREFIX):]
+    inner = key[len(_OMNIMOT_LM_PREFIX) :]
     if "_moe_gen" in inner:
         return None
     if inner.startswith("lm_head."):
         return inner
     if inner.startswith("model."):
-        return "model.language_model." + inner[len("model."):]
+        return "model.language_model." + inner[len("model.") :]
     return None
 
 
@@ -85,15 +84,15 @@ def convert_model_to_vlm_safetensors(args: Args) -> None:
     del cosmos3_state, cosmos3_model
 
     print(f"Loading {args.vlm_model_name} (visual tower + LM defaults, bf16, CPU)...")
-    model = Qwen3VLForConditionalGeneration.from_pretrained(
-        args.vlm_model_name, dtype=torch.bfloat16
-    )
+    model = Qwen3VLForConditionalGeneration.from_pretrained(args.vlm_model_name, dtype=torch.bfloat16)
 
     incompatible = model.load_state_dict(lm_state, strict=False)
     n_overlaid = len(lm_state) - len(incompatible.unexpected_keys)
-    print(f"  overlaid {n_overlaid}/{len(lm_state)} LM tensors "
-          f"(unexpected={len(incompatible.unexpected_keys)}, "
-          f"missing-in-LM-state={len(incompatible.missing_keys)} — these are visual/etc kept from HF)")
+    print(
+        f"  overlaid {n_overlaid}/{len(lm_state)} LM tensors "
+        f"(unexpected={len(incompatible.unexpected_keys)}, "
+        f"missing-in-LM-state={len(incompatible.missing_keys)} — these are visual/etc kept from HF)"
+    )
     if incompatible.unexpected_keys:
         raise RuntimeError(
             f"Cosmos3 LM tensors not present in Qwen3VL: "

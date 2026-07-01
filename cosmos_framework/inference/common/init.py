@@ -93,8 +93,8 @@ def _console_filter(record: dict) -> bool:
 
 
 def _init_log_console(*, verbose: bool | None = None):
-    from cosmos_framework.utils.flags import VERBOSE
     from cosmos_framework.utils import log
+    from cosmos_framework.utils.flags import VERBOSE
 
     if verbose is None:
         verbose = VERBOSE
@@ -238,8 +238,8 @@ def init_script(
 
 def init_output_dir(output_dir: Path, *, resume: bool = False, job_name: str | None = None):
     """Initialize output directory."""
-    from cosmos_framework.utils.flags import FLAGS
     from cosmos_framework.utils import log
+    from cosmos_framework.utils.flags import FLAGS
 
     if job_name is not None:
         log.logger.configure(extra={"job_name": job_name})

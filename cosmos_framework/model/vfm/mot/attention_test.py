@@ -8,10 +8,6 @@ import pytest
 import torch
 
 import cosmos_framework.model.vfm.mot.attention as attention
-from cosmos_framework.model.attention.natten import NATTEN_SUPPORTED
-from cosmos_framework.model.vfm.mot.attention import (
-    build_packed_sequence,
-)
 from cosmos_framework.data.vfm.sequence_packing.runtime import (
     get_all_seq,
     get_gen_seq,
@@ -19,6 +15,10 @@ from cosmos_framework.data.vfm.sequence_packing.runtime import (
     set_gen_seq,
     set_und_seq,
     zeros_like,
+)
+from cosmos_framework.model.attention.natten import NATTEN_SUPPORTED
+from cosmos_framework.model.vfm.mot.attention import (
+    build_packed_sequence,
 )
 
 MAX_SEQ_LEN = 24

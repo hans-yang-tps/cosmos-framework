@@ -13,8 +13,8 @@ from torchcodec.decoders import VideoDecoder
 from torchvision.transforms.v2 import Resize, UniformTemporalSubsample
 
 from cosmos_framework.data.imaginaire.webdataset.augmentors.image.misc import obtain_augmentation_size
-from cosmos_framework.utils import log
 from cosmos_framework.data.vfm.augmentors.video_parsing import VideoParsingWithFullFrames
+from cosmos_framework.utils import log
 
 # Local copies of the torchcodec decoder helpers so this module does not depend on
 # private symbols of ``video_parsing.py``. Behavior matches the originals.

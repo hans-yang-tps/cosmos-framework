@@ -116,23 +116,38 @@ class Args:
 
 def _parse_args(argv: Optional[list[str]] = None) -> Args:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
-    p.add_argument("--out_root", required=True,
-                   help="Directory to write videophy2_{train,val}/ subdirs into.")
+    p.add_argument("--out_root", required=True, help="Directory to write videophy2_{train,val}/ subdirs into.")
     p.add_argument("--split", choices=["train", "test", "both"], default="both")
-    p.add_argument("--score_field", default="pc", choices=["pc", "sa", "joint"],
-                   help="HF column to use as the assistant target. Default: pc (Physical Commonsense).")
-    p.add_argument("--include_caption", action="store_true",
-                   help="Append the caption (or upsampled_caption) to the user prompt.")
-    p.add_argument("--caption_field", default="upsampled_caption",
-                   help="Which caption column to use when --include_caption is set.")
-    p.add_argument("--limit", type=int, default=None,
-                   help="Smoke-test cap: only process the first N rows of each split.")
+    p.add_argument(
+        "--score_field",
+        default="pc",
+        choices=["pc", "sa", "joint"],
+        help="HF column to use as the assistant target. Default: pc (Physical Commonsense).",
+    )
+    p.add_argument(
+        "--include_caption", action="store_true", help="Append the caption (or upsampled_caption) to the user prompt."
+    )
+    p.add_argument(
+        "--caption_field",
+        default="upsampled_caption",
+        help="Which caption column to use when --include_caption is set.",
+    )
+    p.add_argument(
+        "--limit", type=int, default=None, help="Smoke-test cap: only process the first N rows of each split."
+    )
     p.add_argument("--hf_train_repo", default=DEFAULT_HF_REPO)
     p.add_argument("--hf_test_repo", default=DEFAULT_HF_TEST_REPO)
-    p.add_argument("--media_field_name", default="video_0",
-                   help="Key under which the media bytes will be referenced in the conversation JSON.")
-    p.add_argument("--workers", type=int, default=DEFAULT_WORKERS,
-                   help=f"Concurrent download workers per split. Default {DEFAULT_WORKERS}.")
+    p.add_argument(
+        "--media_field_name",
+        default="video_0",
+        help="Key under which the media bytes will be referenced in the conversation JSON.",
+    )
+    p.add_argument(
+        "--workers",
+        type=int,
+        default=DEFAULT_WORKERS,
+        help=f"Concurrent download workers per split. Default {DEFAULT_WORKERS}.",
+    )
     p.add_argument("-v", "--verbose", action="count", default=0)
     ns = p.parse_args(argv)
     logging.basicConfig(
@@ -159,7 +174,9 @@ def _parse_args(argv: Optional[list[str]] = None) -> Args:
 def _make_session(timeout_seconds: int, pool_size: int = DEFAULT_WORKERS) -> requests.Session:
     s = requests.Session()
     retries = Retry(
-        total=5, backoff_factor=1.0, status_forcelist=[429, 500, 502, 503, 504],
+        total=5,
+        backoff_factor=1.0,
+        status_forcelist=[429, 500, 502, 503, 504],
         allowed_methods=frozenset(["GET", "HEAD"]),
     )
     adapter = HTTPAdapter(max_retries=retries, pool_connections=pool_size, pool_maxsize=pool_size)
@@ -409,7 +426,12 @@ def _build_split(args: Args, hf_repo: str, out_subdir: str) -> None:
 
     logger.info(
         "split=%s done: wrote %d entries to %s (ok=%d skip=%d fail=%d)",
-        out_subdir, len(meta), meta_path, n_ok, n_skip, n_fail,
+        out_subdir,
+        len(meta),
+        meta_path,
+        n_ok,
+        n_skip,
+        n_fail,
     )
 
 

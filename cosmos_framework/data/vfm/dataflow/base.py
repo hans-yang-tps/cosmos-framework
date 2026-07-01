@@ -22,9 +22,7 @@ class DataDistributor(ABC):
     shuffles, and (later) carries checkpoint/resume state."""
 
     @abstractmethod
-    def stream(
-        self, dp_rank: int, dp_world_size: int, worker_id: int, num_workers: int
-    ) -> Iterator[Any]:
+    def stream(self, dp_rank: int, dp_world_size: int, worker_id: int, num_workers: int) -> Iterator[Any]:
         """Yield this (rank, worker)'s disjoint slice of raw items, indefinitely."""
 
     def state_dict(self) -> dict:
@@ -40,8 +38,7 @@ class RawItemProcessor(ABC):
     """Transforms one raw dataset item into one training-ready sample dict."""
 
     @abstractmethod
-    def process(self, item: Any) -> dict:
-        ...
+    def process(self, item: Any) -> dict: ...
 
 
 class SampleBatcher(ABC):
@@ -61,5 +58,4 @@ class BatchCollator(ABC):
     """Collates one group of samples into one batch dict for ``model.forward()``."""
 
     @abstractmethod
-    def collate(self, samples: list[dict]) -> dict:
-        ...
+    def collate(self, samples: list[dict]) -> dict: ...

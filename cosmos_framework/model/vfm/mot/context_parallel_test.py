@@ -11,17 +11,6 @@ import torch
 import torch.distributed as dist
 
 from cosmos_framework.data.vfm.joint_dataloader import IterativeJointDataLoader
-from cosmos_framework.model.vfm.mot.attention import (
-    SplitInfo,
-    dispatch_attention,
-)
-from cosmos_framework.model.vfm.mot.context_parallel_utils import (
-    context_parallel_attention,
-    get_context_parallel_sharded_sequence,
-)
-from cosmos_framework.model.vfm.mot.parallelize_unified_mot import ARReplicatedIODispatch
-from cosmos_framework.model.vfm.mot.unified_mot import _apply_head_sharded_o_proj
-from cosmos_framework.model.vfm.utils.data_and_condition import GenerationDataClean
 from cosmos_framework.data.vfm.sequence_packing import (
     PackedSequence,
     build_sequence_plans_from_data_batch,
@@ -38,6 +27,15 @@ from cosmos_framework.data.vfm.sequence_packing.runtime import (
     set_gen_seq,
     set_und_seq,
 )
+from cosmos_framework.model.vfm.mot.attention import (
+    SplitInfo,
+    dispatch_attention,
+)
+from cosmos_framework.model.vfm.mot.context_parallel_utils import (
+    context_parallel_attention,
+    get_context_parallel_sharded_sequence,
+)
+from cosmos_framework.model.vfm.utils.data_and_condition import GenerationDataClean
 from cosmos_framework.utils.vfm.parallelism import ParallelDims
 
 
@@ -741,8 +739,6 @@ def _make_factored_pack(
         "_num_causal_tokens": S_und_global,
         "_num_full_tokens": S_gen_global,
     }
-
-
 
 
 @pytest.mark.L0
